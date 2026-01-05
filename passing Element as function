@@ -1,0 +1,67 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="https://unpkg.com/react@16.7.0/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@16.7.0/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+    <title>React Component Example</title>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+        let dataCollection = [
+            {id: 1, name: 'box 1'},
+            {id: 2, name: 'box 2'},
+            {id: 3, name: 'box 3'},
+            {id: 4, name: 'box 4'},
+        ]
+
+        // FIX 1: Component names MUST start with Uppercase (Box, not box)
+        // FIX 2: Components receive 'props', not specific data arguments directly
+        function Box(props){
+            return(
+                <div>
+                    {
+                        // FIX 3: Added 'return' inside map, or use parenthesis ()
+                        // FIX 4: key must be {item.id}, not string 'item.id'
+                        props.data.map((item) => {
+                            return (
+                                <div key={item.id}>
+                                    <h1>{item.name}</h1>
+                                </div>
+                            )
+                        })
+                    }
+                </div>
+            )
+        }
+        
+        // FIX 5: Remove second argument. Nested elements are inside 'props.children'
+        function NewFunction(props) {
+            return (
+                <div>
+                    <h1>{props.text}</h1> 
+                    {/* This renders whatever is inside the <NewFunction> tags */}
+                    {props.children()}
+                </div>
+            )
+        }
+
+        class App extends React.Component {
+            render() {
+                return (
+                    <div>
+                        <h2>Header</h2>
+                        
+                        <NewFunction text="Reusing the component..." children={ () =>  <Box data={dataCollection}/>}/>
+                    </div>
+                );
+            }
+        }
+
+        ReactDOM.render(<App />, document.querySelector("#root"))
+    </script>
+</body>
+</html>
