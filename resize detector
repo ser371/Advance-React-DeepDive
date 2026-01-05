@@ -1,0 +1,91 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+    
+    <title>React Resize Example</title>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+        // 1. Component Name must be capitalized
+        const ResizeDetector = () => {
+            // This hook requires React 16.8+
+            const [width, setWidth] = React.useState(window.innerWidth);
+
+            React.useEffect(() => {
+                const handleResize = () => {
+                    setWidth(window.innerWidth);
+                };
+                
+                window.addEventListener('resize', handleResize);
+                
+                // Cleanup listener
+                return () => {
+                    window.removeEventListener('resize', handleResize);
+                };
+            }, []);
+
+            return (
+                <div style={{ border: '2px solid red', padding: '10px' }}>
+                    <h3>Window Width: {width}px</h3>
+                </div>
+            );
+        }
+
+        let dataCollection = [
+            { id: 1, name: 'box 1' },
+            { id: 2, name: 'box 2' },
+        ]
+
+        function Box(props) {
+            return (
+                <div>
+                    {props.data.map((item) => (
+                         <div key={item.id}>
+                             <h1>{item.name}</h1>
+                         </div>
+                    ))}
+                </div>
+            )
+        }
+
+        function NewFunction(props) {
+            return (
+                <div>
+                    <h2>{props.text}</h2>
+                    {/* Executes the function passed as a child */}
+                    {props.children()} 
+                </div>
+            )
+        }
+
+        class App extends React.Component {
+            render() {
+                return (
+                    <div>
+                        <h2>Main Header</h2>
+                        
+                        <NewFunction text="My Boxes" children={() => <Box data={dataCollection} />} />
+                        
+                        {/* Capitalized <ResizeDetector /> */}
+                        <NewFunction text="My Resize Detector" children={() => <ResizeDetector />} />
+                    </div>
+                );
+            }
+        }
+
+        // React 18 Rendering Syntax
+        const container = document.getElementById('root');
+        const root = ReactDOM.createRoot(container);
+        root.render(<App />);
+        
+    </script>
+</body>
+</html>
